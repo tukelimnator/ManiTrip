@@ -644,7 +644,9 @@ var CATEGORY_LABELS = {
 };
 
 function getAdviceTopics() {
-    return JSON.parse(localStorage.getItem("manitrip_advice") || "[]");
+    var topics = JSON.parse(localStorage.getItem("manitrip_advice") || "[]");
+    topics.forEach(function(t) { if (!t.replies) t.replies = []; });
+    return topics;
 }
 
 function saveAdviceTopics(topics) {
@@ -664,6 +666,7 @@ function syncFromFirebase() {
         var data = snapshot.val();
         if (data) {
             var topics = Array.isArray(data) ? data : Object.values(data);
+            topics.forEach(function(t) { if (!t.replies) t.replies = []; });
             localStorage.setItem("manitrip_advice", JSON.stringify(topics));
             renderAdviceTopics();
         }
@@ -813,6 +816,7 @@ function submitReply(topicId, form) {
     var topics = getAdviceTopics();
     var topic = topics.find(function(t) { return t.id === topicId; });
     if (!topic) return;
+    if (!topic.replies) topic.replies = [];
 
     topic.replies.push({
         id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
