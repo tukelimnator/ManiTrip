@@ -654,13 +654,17 @@ function saveAdviceTopics(topics) {
     }
 }
 
+var isSubmitting = false;
+
 function syncFromFirebase() {
     if (typeof firebaseReady === "undefined" || !firebaseReady) return;
 
     firebase.database().ref("advice_topics").on("value", function(snapshot) {
+        if (isSubmitting) return;
         var data = snapshot.val();
-        if (data && Array.isArray(data)) {
-            localStorage.setItem("manitrip_advice", JSON.stringify(data));
+        if (data) {
+            var topics = Array.isArray(data) ? data : Object.values(data);
+            localStorage.setItem("manitrip_advice", JSON.stringify(topics));
             renderAdviceTopics();
         }
     });
@@ -788,9 +792,18 @@ function generateSorunsalResponse(topicCategory, topicText) {
     return allPool[Math.floor(Math.random() * allPool.length)];
 }
 
-function submitReply(topicId) {
-    var nameInput = document.getElementById("reply-name-" + topicId);
-    var textInput = document.getElementById("reply-text-" + topicId);
+function handleReplySubmit(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var form = e.target;
+    var topicId = form.getAttribute("data-topic-id");
+    if (!topicId) return;
+    submitReply(topicId, form);
+}
+
+function submitReply(topicId, form) {
+    var nameInput = form ? form.querySelector('[name="reply-name"]') : null;
+    var textInput = form ? form.querySelector('[name="reply-text"]') : null;
     if (!nameInput || !textInput) return;
 
     var name = nameInput.value.trim();
@@ -821,16 +834,21 @@ function submitReply(topicId) {
         });
     }
 
+    isSubmitting = true;
     saveAdviceTopics(topics);
     nameInput.value = "";
     textInput.value = "";
     renderAdviceTopics();
-    showToast(hasSorunsal ? "Sorunsal sana cevap verdi! 🔥" : "Yanıtınız eklendi!");
 
-    var repliesSection = document.getElementById("replies-" + topicId);
-    if (repliesSection) repliesSection.classList.add("open");
-    var toggleBtn = document.getElementById("toggle-" + topicId);
-    if (toggleBtn) toggleBtn.classList.add("open");
+    setTimeout(function() {
+        var repliesSection = document.getElementById("replies-" + topicId);
+        if (repliesSection) repliesSection.classList.add("open");
+        var toggleBtn = document.getElementById("toggle-" + topicId);
+        if (toggleBtn) toggleBtn.classList.add("open");
+        isSubmitting = false;
+    }, 100);
+
+    showToast(hasSorunsal ? "Sorunsal sana cevap verdi! 🔥" : "Yanıtınız eklendi!");
 }
 
 function toggleReplies(topicId) {
@@ -931,11 +949,11 @@ function renderAdviceTopics() {
             html += '</div>';
         }
 
-        html += '<div class="advice-reply-form">';
-        html += '<input type="text" id="reply-name-' + t.id + '" placeholder="Adın" maxlength="25">';
-        html += '<textarea id="reply-text-' + t.id + '" placeholder="Tavsiyeni yaz... (@sorunsal yaz, agresif tavsiye alsın!)" maxlength="500" rows="1"></textarea>';
-        html += '<button type="button" onclick="submitReply(\'' + t.id + '\')">Gönder</button>';
-        html += '</div>';
+        html += '<form class="advice-reply-form" data-topic-id="' + t.id + '" onsubmit="handleReplySubmit(event)">';
+        html += '<input type="text" name="reply-name" placeholder="Adın" maxlength="25" required>';
+        html += '<textarea name="reply-text" placeholder="Tavsiyeni yaz... (@sorunsal yaz, agresif tavsiye alsın!)" maxlength="500" rows="1" required></textarea>';
+        html += '<button type="submit">Gönder</button>';
+        html += '</form>';
 
         html += '</div>';
         html += '</div>';
