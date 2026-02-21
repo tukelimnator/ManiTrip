@@ -649,6 +649,21 @@ function getAdviceTopics() {
 
 function saveAdviceTopics(topics) {
     localStorage.setItem("manitrip_advice", JSON.stringify(topics));
+    if (typeof firebaseReady !== "undefined" && firebaseReady) {
+        firebase.database().ref("advice_topics").set(topics);
+    }
+}
+
+function syncFromFirebase() {
+    if (typeof firebaseReady === "undefined" || !firebaseReady) return;
+
+    firebase.database().ref("advice_topics").on("value", function(snapshot) {
+        var data = snapshot.val();
+        if (data && Array.isArray(data)) {
+            localStorage.setItem("manitrip_advice", JSON.stringify(data));
+            renderAdviceTopics();
+        }
+    });
 }
 
 function submitAdvice(e) {
@@ -680,6 +695,99 @@ function submitAdvice(e) {
     showToast("Konunuz paylaşıldı!");
 }
 
+// ===== @SORUNSAL BOT =====
+
+var SORUNSAL_RESPONSES = {
+    genel: [
+        "Kardeşim bu ilişkide iki tarafın da ego'su Everest kadar yüksek. Biriniz inecek mi yoksa ikiziniz de o dağın tepesinde mi donacaksınız? İnin lan aşağı.",
+        "Bunu okudum bir daha okudum, üçüncüde anladım: ikiniz de birbirinizden betersiniz. Niye tartışıyorsunuz amk, aynı kafa zaten.",
+        "Sana tavsiye: SUS. Evet öyle. 24 saat sus, bak bakalım ne oluyor. Konuşarak çözemediysen kapa o çeneni bir.",
+        "Abi derdini anlattın da çözüm mü istiyorsun onay mı? Çözüm istiyorsan sert konuşacağım, hazır ol.",
+        "Bu tartışmayı kazanmak mı istiyorsun mutlu mu olmak? İkisi aynı anda olmuyor, birini seç be kardeşim.",
+        "Tamam dinledim. Şimdi telefonu kapat yüz yüze konuş. Emoji ile tartışma olmaz amk, bu WhatsApp mı mahkeme mi?",
+        "Valla bu anlattıkların benim ilkokuldaki kavgalarıma benziyor. Büyüyün artık lan, ergenlik bitti.",
+        "İkinize de lazım olan: bir bardak su, derin nefes ve 'ben de hata yapıyor olabilirim' cümlesi. Dene bak mucize gibi.",
+        "Haklısın belki. Ama haklı olmak ilişkiyi kurtarmıyor. Bazen haksız olup özür dilemek daha yürekli iştir.",
+        "Bu sorunu çözmek istiyorsan önce şunu kabul et: Senin de bu tartışmadaki payın en az %50. Melek misin sanki?",
+        "Gel buraya otur, sana bir şey söyleyeyim: İlişkide haklı olan değil, ilişkiyi seven kazanır. Egonu ye bitir.",
+        "Off yine mi bu muhabbet? Sıkıldım sizden. Git bir dondurma ye, sakinleş, sonra düşün.",
+        "Sana acı bir gerçek: Karşındaki insan seni kızdırıyorsa, sana o kadar etki ediyorsa, demek ki önemsiyor. Önemsemese siklmezdi bile.",
+        "Derdini sikeyim ama yine de dinliyorum. Çözüm basit: otur karşısına, göz göze bak, 'seni seviyorum ama şu an sinirden patlıyorum' de. Bitti."
+    ],
+    kiskanclik: [
+        "Kıskançlık sevgiden değil güvensizlikten gelir. Sorunu karşında değil aynada ara be amına koyayım.",
+        "Telefonunu kontrol ediyorsan ilişki değil istihbarat teşkilatı kurmuşsun. FBI mısın lan sen?",
+        "Her beğendiği fotoğrafa trip atıyorsan, sorun onda değil sende. Git kendine güven kas, sonra gel.",
+        "Kıskanıyorsun çünkü kendi değerini bilmiyorsun. Karşındaki seni SEÇMİŞ. Bunu anla artık salak mısın?",
+        "Bir insanı kafese koyarsan kaçmak ister, serbest bırakırsan yanında kalır. Gevşe biraz be abi.",
+        "Kıskançlığın ilacı yok ama reçetesi var: KENDİNE GÜVEN. Git spor yap, kitap oku, hobi edin. Boş kaldıkça kafayı yersin.",
+        "Instagram'da kimi takip ediyor diye araştırıyorsan, sana ilişki değil terapi lazım. Ciddiyim."
+    ],
+    iletisim: [
+        "Mesaj atarak tartışan insan, mektupla boks yapmaya çalışan adam gibi. Aç telefonunu ARA lan.",
+        "'Bir şeyim yok' deyip trip atan mısın? Bravo, ilişki yıkmanın en etkili yolu bu. Alkış.",
+        "'Anla beni' diyorsun ama açıklamıyorsun. Karşındaki falcı değil be amk. AÇ AĞZINI KONUŞ.",
+        "'Tamam' yazıyorsun mesajda. O 'tamam'ın arkasında 47 farklı anlam var, karşındaki hangisini anlasın? Net ol.",
+        "Ses tonundan anlasın diyorsun. Kardeşim burası telepati merkezi değil, mesajda ses tonu mu olur? ARA.",
+        "İletişim dediğin iki taraflıdır. Sen konuşurken o dinleyecek, o konuşurken sen dinleyeceksin. İkiniz de aynı anda bağırmayı bırakın.",
+        "'Neyse boşver' diyen taraf mısın? O cümle ilişkide atom bombası gibi. Boşverme, KONUŞ."
+    ],
+    guven: [
+        "Güven bir kere kırılınca yapıştırıcıyla yapıştıramazsın. Ya yeniden inşa edeceksin ya da siktir git. Ortası yok.",
+        "Sürekli hesap soran biri misin? O zaman sorun karşında değil AYNADA. Kendine bak.",
+        "Güvenmiyorsan neden berabersin? Kendine işkence mi ediyorsun? Mazoşist misin?",
+        "Güven inşa etmek istiyorsan önce kendi yalanlarını bırak. 'Arkadaşlarlaydım' deyip başka yere giden sen değil misin?",
+        "Bir kere yalan söyleyen bin kere söyler. Ama herkes ikinci şansı hak eder. Sadece BİR ikinci şans. Üçüncü yok.",
+        "Güven sorunu yaşıyorsanız, ikiniz de oturup açık açık konuşacaksınız. Tablo neyi gösteriyor? Yalan var mı yok mu? Net olun."
+    ],
+    uzaktan: [
+        "Uzak ilişki mi? Vay amk, sado-mazoşist misiniz? Şaka şaka, ama ciddi emek ister. Günde en az 1 saat görüntülü konuş, yoksa biter.",
+        "Uzak ilişkide güven %200 lazım. %199 olsa bile çöker. Ya güveneceksin ya da kendini yiyeceksin.",
+        "Mesafe değil mesaj öldürür ilişkiyi. Her gün 'günaydın' at, 'iyi geceler' at, arada 'seni özledim' at. Zor değil amk.",
+        "Uzak ilişkideysen ve güvenmiyorsan, bırak birbirinizi. Hem kendinize hem karşınızdakine eziyet etmeyin.",
+        "Uzak ilişkinin tek ilacı: BİTİŞ TARİHİ. Ne zaman bir araya geleceksiniz? Planınız yoksa hayal kuruyorsunuz."
+    ],
+    barişma: [
+        "Barışmak istiyorsan 'ama' kelimesini sözlüğünden sil. 'Özür dilerim AMA...' özür değil, bahanedir. Direkt 'özür dilerim' de, nokta.",
+        "Git al bir çiçek bir de çikolata, kapısına dik. Basit işleri zorlaştırmayın amk, roket bilimi değil bu.",
+        "Ego'nu yutup 'özür dilerim' demek ölüm değil. Ama ego ile devam etmek ilişkinin ölümü. Seç.",
+        "Barışmak için ilk adımı atan zayıf değildir, yüreklidir. Git at o mesajı, 'konuşalım mı?' de. Basit.",
+        "3 gündür konuşmuyorsunuz ve ikiziniz de bekliyorsunuz. Neyi bekliyorsunuz amk? Birleşmiş Milletler mi araya girecek? Aç telefonu ARA.",
+        "Barışacaksan düzgün barış. 'Neyse ya gel barışalım' değil. Otur, konuş, nerede hata yaptık, nasıl düzeltiriz. Adam gibi."
+    ],
+    diger: [
+        "Ne diyeyim sana? Her ilişkinin bir son kullanma tarihi yok, ama bakmazsan bozulur. Bakım yap ilişkine.",
+        "Sevmek kolay, sevgiyi sürdürmek zor. Zor olan şeyler için çaba gösterilir. Göstermiyorsan sevmiyorsundur.",
+        "Sana son bir tavsiye: Mükemmel ilişki diye bir şey yok. Ama mükemmel ÇABA var. İkiziniz de çabalayın.",
+        "Herkes mutlu çift fotoğrafı paylaşıyor, sen de özeniyor musun? O fotoğrafların arkasında da kavga var kardeşim. Normal bu.",
+        "İlişki iki kişiliktir. Sen tek başına kurtaramazsın. Karşı taraf da istemiyorsa, bırak gitsin. Kendine acıma."
+    ]
+};
+
+function generateSorunsalResponse(topicCategory, topicText) {
+    var pool = SORUNSAL_RESPONSES[topicCategory] || SORUNSAL_RESPONSES.genel;
+    var allPool = pool.concat(SORUNSAL_RESPONSES.genel);
+
+    var keywords = {
+        kiskanclik: ["kıskan", "takip", "beğen", "instagram", "telefon", "kontrol", "stalklıyor"],
+        iletisim: ["mesaj", "cevap", "konuş", "anlamıyor", "dinlemiyor", "yazm", "aramiyor", "sessiz"],
+        guven: ["güven", "yalan", "aldatma", "ihanet", "şüphe", "gizli"],
+        barişma: ["barış", "özür", "küs", "konuşmuyoruz", "ayrıl", "dön", "son şans"]
+    };
+
+    var lowerText = topicText.toLowerCase();
+    for (var cat in keywords) {
+        for (var k = 0; k < keywords[cat].length; k++) {
+            if (lowerText.indexOf(keywords[cat][k]) !== -1 && SORUNSAL_RESPONSES[cat]) {
+                allPool = allPool.concat(SORUNSAL_RESPONSES[cat]);
+                break;
+            }
+        }
+    }
+
+    return allPool[Math.floor(Math.random() * allPool.length)];
+}
+
 function submitReply(topicId) {
     var nameInput = document.getElementById("reply-name-" + topicId);
     var textInput = document.getElementById("reply-text-" + topicId);
@@ -697,14 +805,27 @@ function submitReply(topicId) {
         id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
         name: name,
         text: text,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        isBot: false
     });
+
+    var hasSorunsal = text.toLowerCase().indexOf("@sorunsal") !== -1;
+    if (hasSorunsal) {
+        var botResponse = generateSorunsalResponse(topic.category, topic.detail + " " + text);
+        topic.replies.push({
+            id: "bot_" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+            name: "Sorunsal Bot",
+            text: botResponse,
+            date: new Date().toISOString(),
+            isBot: true
+        });
+    }
 
     saveAdviceTopics(topics);
     nameInput.value = "";
     textInput.value = "";
     renderAdviceTopics();
-    showToast("Yanıtınız eklendi!");
+    showToast(hasSorunsal ? "Sorunsal sana cevap verdi! 🔥" : "Yanıtınız eklendi!");
 
     var repliesSection = document.getElementById("replies-" + topicId);
     if (repliesSection) repliesSection.classList.add("open");
@@ -793,15 +914,17 @@ function renderAdviceTopics() {
             html += '<div class="advice-replies-list">';
             for (var j = 0; j < t.replies.length; j++) {
                 var r = t.replies[j];
-                var rInitial = r.name.charAt(0).toUpperCase();
-                html += '<div class="advice-reply">';
-                html += '<div class="advice-reply-avatar">' + rInitial + '</div>';
+                var isBot = r.isBot === true;
+                var rInitial = isBot ? '🔥' : r.name.charAt(0).toUpperCase();
+                var botClass = isBot ? ' bot-reply' : '';
+                html += '<div class="advice-reply' + botClass + '">';
+                html += '<div class="advice-reply-avatar' + (isBot ? ' bot-avatar' : '') + '">' + rInitial + '</div>';
                 html += '<div class="advice-reply-content">';
                 html += '<div class="advice-reply-header">';
-                html += '<span class="advice-reply-name">' + escapeHtml(r.name) + '</span>';
+                html += '<span class="advice-reply-name' + (isBot ? ' bot-name' : '') + '">' + escapeHtml(r.name) + (isBot ? ' 🤖' : '') + '</span>';
                 html += '<span class="advice-reply-date">' + formatDate(r.date) + '</span>';
                 html += '</div>';
-                html += '<p class="advice-reply-text">' + escapeHtml(r.text) + '</p>';
+                html += '<p class="advice-reply-text' + (isBot ? ' bot-text' : '') + '">' + escapeHtml(r.text) + '</p>';
                 html += '</div>';
                 html += '</div>';
             }
@@ -810,7 +933,7 @@ function renderAdviceTopics() {
 
         html += '<div class="advice-reply-form">';
         html += '<input type="text" id="reply-name-' + t.id + '" placeholder="Adın" maxlength="25">';
-        html += '<textarea id="reply-text-' + t.id + '" placeholder="Tavsiyeni yaz..." maxlength="500" rows="1"></textarea>';
+        html += '<textarea id="reply-text-' + t.id + '" placeholder="Tavsiyeni yaz... (@sorunsal yaz, agresif tavsiye alsın!)" maxlength="500" rows="1"></textarea>';
         html += '<button type="button" onclick="submitReply(\'' + t.id + '\')">Gönder</button>';
         html += '</div>';
 
@@ -824,4 +947,5 @@ function renderAdviceTopics() {
 document.addEventListener("DOMContentLoaded", function() {
     init();
     renderAdviceTopics();
+    syncFromFirebase();
 });

@@ -1606,6 +1606,40 @@ body {
     background: #d63a54;
 }
 
+/* Bot reply styling */
+.advice-reply.bot-reply {
+    background: rgba(233, 69, 96, 0.06);
+    border-radius: var(--radius-xs);
+    padding: 14px;
+    margin: 6px 0;
+    border: 1px solid rgba(233, 69, 96, 0.15);
+}
+
+.advice-reply-avatar.bot-avatar {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-size: 16px;
+    animation: botPulse 2s ease-in-out infinite;
+}
+
+@keyframes botPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(233, 69, 96, 0); }
+}
+
+.advice-reply-name.bot-name {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.advice-reply-text.bot-text {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
 .advice-empty {
     text-align: center;
     padding: 60px 20px;
