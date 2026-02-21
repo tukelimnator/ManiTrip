@@ -15,13 +15,13 @@
 */
 
 var FIREBASE_CONFIG = {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyAhZRRenDmPggZHXIDCZCDLgrR_OPkWweA",
+    authDomain: "manitrip-9e8eb.firebaseapp.com",
+    databaseURL: "https://manitrip-9e8eb-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "manitrip-9e8eb",
+    storageBucket: "manitrip-9e8eb.firebasestorage.app",
+    messagingSenderId: "472271950165",
+    appId: "1:472271950165:web:148fa643bcec6d193d9fdc"
 };
 
 var firebaseReady = false;
