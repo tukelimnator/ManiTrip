@@ -323,10 +323,40 @@ const BODY_HTML = `
       </div>
     </div>
     <div class="footer-bottom">
+      <p>Emeği geçen Elif'e teşekkür ederiz. 💖</p>
       <p>&copy; 2026 ManiTrip. Tüm kavgalar saklıdır.</p>
     </div>
   </div>
 </footer>
+
+<nav class="touch-bar" id="touch-bar">
+  <a href="#hero" class="touch-bar-item active" data-section="hero">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    <span>Ana Sayfa</span>
+  </a>
+  <a href="#main-content" class="touch-bar-item" data-section="main-content">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <span>Mekanlar</span>
+  </a>
+  <a href="#advice-section" class="touch-bar-item" data-section="advice-section">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span>Tavsiye</span>
+  </a>
+  <a class="touch-bar-item" id="touch-bar-scroll-top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+    <span>Yukarı</span>
+  </a>
+</nav>
 `;
 
 export default function Home() {
@@ -356,6 +386,56 @@ export default function Home() {
       document.body.appendChild(script);
     }
     loadNext();
+
+    // Touch bar active section tracking
+    const sections = ['hero', 'main-content', 'advice-section'];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.touch-bar-item').forEach((item) => {
+            item.classList.toggle('active', item.getAttribute('data-section') === id);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    setTimeout(() => {
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      const scrollTopBtn = document.getElementById('touch-bar-scroll-top');
+      if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Swipe gesture support for touch bar
+      let touchStartX = 0;
+      let touchEndX = 0;
+      document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) < 80) return;
+        const activeItem = document.querySelector('.touch-bar-item.active');
+        const currentSection = activeItem?.getAttribute('data-section') || 'hero';
+        const idx = sections.indexOf(currentSection);
+        if (diff > 0 && idx < sections.length - 1) {
+          const next = document.getElementById(sections[idx + 1]);
+          if (next) next.scrollIntoView({ behavior: 'smooth' });
+        } else if (diff < 0 && idx > 0) {
+          const prev = document.getElementById(sections[idx - 1]);
+          if (prev) prev.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, { passive: true });
+    }, 1000);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
