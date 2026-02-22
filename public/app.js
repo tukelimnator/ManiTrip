@@ -804,14 +804,19 @@ function handleReplySubmit(e) {
     submitReply(topicId, form);
 }
 
-function submitReply(topicId, form) {
-    var nameInput = form ? form.querySelector('[name="reply-name"]') : null;
-    var textInput = form ? form.querySelector('[name="reply-text"]') : null;
-    if (!nameInput || !textInput) return;
+var ANON_NAMES = ["Anonim", "Gizemli Yolcu", "Kalbi Kırık", "Gece Kuşu", "Sessiz Çığlık", "Yalnız Kurt", "Fırtına", "Hayalet", "Kayıp Ruh", "Meçhul"];
+function getRandomAnonName() {
+    return ANON_NAMES[Math.floor(Math.random() * ANON_NAMES.length)];
+}
 
-    var name = nameInput.value.trim();
+function submitReply(topicId, form) {
+    var textInput = form ? form.querySelector('[name="reply-text"]') : null;
+    if (!textInput) return;
+
     var text = textInput.value.trim();
-    if (!name || !text) return;
+    if (!text) return;
+
+    var name = getRandomAnonName();
 
     var topics = getAdviceTopics();
     var topic = topics.find(function(t) { return t.id === topicId; });
@@ -830,7 +835,6 @@ function submitReply(topicId, form) {
 
     isSubmitting = true;
     saveAdviceTopics(topics);
-    nameInput.value = "";
     textInput.value = "";
     renderAdviceTopics();
 
@@ -984,8 +988,7 @@ function renderAdviceTopics() {
         }
 
         html += '<form class="advice-reply-form" data-topic-id="' + t.id + '" onsubmit="handleReplySubmit(event)">';
-        html += '<input type="text" name="reply-name" placeholder="Adın" maxlength="25" required>';
-        html += '<textarea name="reply-text" placeholder="Tavsiyeni yaz... (@sorunsal yaz, agresif tavsiye alsın!)" maxlength="500" rows="1" required></textarea>';
+        html += '<textarea name="reply-text" placeholder="Tavsiyeni yaz... (@sorunsal yaz, bot cevaplasın!) — Enter ile gönder" maxlength="500" rows="1" required onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();this.form.requestSubmit();}"></textarea>';
         html += '<button type="submit">Gönder</button>';
         html += '</form>';
 

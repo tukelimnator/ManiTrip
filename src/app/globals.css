@@ -575,12 +575,6 @@ body {
 .advice-reply-date { font-size: 11px; color: var(--text-muted); }
 .advice-reply-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 .advice-reply-form { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--border); }
-.advice-reply-form input {
-    flex: 0 0 120px; padding: 10px 14px; background: var(--bg-secondary);
-    border: 1px solid var(--border); border-radius: var(--radius-xs);
-    color: var(--text-primary); font-size: 13px; font-family: 'Inter', sans-serif; outline: none;
-}
-.advice-reply-form input:focus { border-color: var(--accent); }
 .advice-reply-form textarea {
     flex: 1; padding: 10px 14px; background: var(--bg-secondary);
     border: 1px solid var(--border); border-radius: var(--radius-xs);
@@ -850,7 +844,7 @@ body {
     .provinces-grid { grid-template-columns: repeat(2, 1fr); }
     .cafe-card { padding: 20px; } .cafe-actions { flex-direction: column; }
     .hero-tags { gap: 6px; } .hero-tag { font-size: 11px; padding: 6px 14px; }
-    .advice-reply-form { flex-wrap: wrap; } .advice-reply-form input { flex: 1 1 100%; } .advice-reply-form textarea { flex: 1 1 100%; }
+    .advice-reply-form { flex-wrap: wrap; } .advice-reply-form textarea { flex: 1 1 100%; }
     .share-panel { padding: 24px 20px 32px; padding-bottom: 80px; } .share-options { grid-template-columns: repeat(2, 1fr); }
     .chat-fab { bottom: 76px; right: 16px; width: 52px; height: 52px; }
     .chat-window { bottom: 140px; max-height: 60vh; }
