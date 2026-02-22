@@ -815,7 +815,7 @@ body {
     width: 280px; max-width: 90%; border-radius: var(--radius);
     border: 3px solid var(--accent);
     box-shadow: 0 8px 40px rgba(225, 29, 72, 0.25);
-    margin-bottom: 20px;
+    margin-top: 20px;
     animation: secretReveal 0.8s ease;
 }
 .secret-text {
