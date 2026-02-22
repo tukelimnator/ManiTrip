@@ -324,6 +324,7 @@ const BODY_HTML = `
     </div>
     <div class="footer-bottom">
       <p>Emeği geçen Elif'e teşekkür ederiz. 💖</p>
+      <p>Yavrum Eloşum Elifim seni seviyorum. ❤️</p>
       <p>&copy; 2026 ManiTrip. Tüm kavgalar saklıdır.</p>
     </div>
   </div>
