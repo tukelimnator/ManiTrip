@@ -839,7 +839,7 @@ function submitReply(topicId, form) {
     renderAdviceTopics();
 
     if (hasSorunsal) {
-        showToast("Manitrip Cheat Bot düşünüyor... 🔥");
+        showToast("Trilece düşünüyor... 🔥");
         var currentTopicId = topicId;
         fetch('/api/chat', {
             method: 'POST',
@@ -856,7 +856,7 @@ function submitReply(topicId, form) {
                 if (!freshTopic.replies) freshTopic.replies = [];
                 freshTopic.replies.push({
                     id: "bot_" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-                    name: "Manitrip Cheat Bot",
+                    name: "Trilece",
                     text: data.reply || "Şu an kafam çalışmıyor, tekrar dene kanka.",
                     date: new Date().toISOString(),
                     isBot: true
@@ -870,7 +870,7 @@ function submitReply(topicId, form) {
                     if (toggleBtn) toggleBtn.classList.add("open");
                     isSubmitting = false;
                 }, 100);
-                showToast("Manitrip Cheat Bot cevap verdi! 🔥");
+                showToast("Trilece cevap verdi! 🔥");
             }
         })
         .catch(function() {

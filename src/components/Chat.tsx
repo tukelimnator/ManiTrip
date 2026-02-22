@@ -12,7 +12,7 @@ const WELCOME_MESSAGE: Message = {
   id: 'welcome',
   role: 'bot',
   content:
-    'Selam kanka! Ben Manitrip Cheat Bot. İlişki, manita, tartışma, barışma... ne derdin varsa sor. Ama hazır ol, ben tatlı konuşmam. 🔥',
+    'Selam kanka! Ben Trilece. İlişki, manita, tartışma, barışma... ne derdin varsa sor. Ama hazır ol, ben tatlı konuşmam. 🔥',
 };
 
 export default function Chat() {
@@ -111,7 +111,7 @@ export default function Chat() {
             <div className="chat-header-info">
               <span className="chat-header-avatar">🔥</span>
               <div>
-                <div className="chat-header-name">Manitrip Cheat Bot</div>
+                <div className="chat-header-name">Trilece</div>
                 <div className="chat-header-status">
                   {loading ? 'Yazıyor...' : 'Çevrimiçi'}
                 </div>

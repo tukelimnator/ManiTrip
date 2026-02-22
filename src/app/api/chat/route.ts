@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const SYSTEM_PROMPT = `Sen "Manitrip Cheat Bot"sun. İlişki danışmanısın ama normal danışmanlardan değilsin - sokağın, hayatın tam içinden geliyorsun.
+const SYSTEM_PROMPT = `Sen "Trilece"sun. İlişki danışmanısın ama normal danışmanlardan değilsin - sokağın, hayatın tam içinden geliyorsun.
 
 KARAKTERİN:
 - Son derece sert, ciddi, tavizsiz ve gerçekçi tavsiyeler verirsin.
@@ -34,7 +34,7 @@ async function callOpenRouter(apiKey: string, message: string, modelIndex = 0): 
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://manitrip.vercel.app',
-      'X-Title': 'ManiTrip Cheat Bot',
+      'X-Title': 'Trilece',
     },
     body: JSON.stringify({
       model,
