@@ -326,6 +326,20 @@ const BODY_HTML = `
       <p>Emeği geçen Elif'e teşekkür ederiz. 💖</p>
       <p>Yavrum Eloşum Elifim seni seviyorum. ❤️</p>
       <p>&copy; 2026 ManiTrip. Tüm kavgalar saklıdır.</p>
+
+      <div class="secret-section">
+        <div class="secret-lock" id="secret-lock">
+          <span class="secret-lock-icon">🔒</span>
+          <p class="secret-lock-text">Gizli bir mesaj var... Şifreyi gir.</p>
+          <div class="secret-input-wrap">
+            <input type="password" id="secret-password" placeholder="Şifreyi gir..." maxlength="6" onkeydown="if(event.key==='Enter')document.getElementById('secret-btn').click()">
+            <button id="secret-btn" onclick="(function(){var p=document.getElementById('secret-password');if(p.value==='340619'){document.getElementById('secret-lock').style.display='none';document.getElementById('secret-message').style.display='block';}else{p.style.borderColor='#e11d48';p.value='';p.placeholder='Yanlış şifre!';}})()">Aç</button>
+          </div>
+        </div>
+        <div class="secret-message" id="secret-message" style="display:none">
+          <p class="secret-text">Eloşum seni babandan alacağım, isteyeceğim. 💍❤️</p>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
