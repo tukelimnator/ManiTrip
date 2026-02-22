@@ -333,7 +333,7 @@ const BODY_HTML = `
         </div>
       </div>
       <div class="secret-message" id="secret-message" style="display:none">
-        <p class="secret-text">Eloşum seni babandan alacağım, isteyeceğim. 💍❤️</p>
+        <p class="secret-text">Eloşum, yavrum seni babandan isteyeceğim. Seviyorum seni. 💍❤️</p>
         <img src="/secret-photo.png" alt="Biz" class="secret-photo">
       </div>
     </div>
