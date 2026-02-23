@@ -9,8 +9,7 @@ const BODY_HTML = `
 <nav class="navbar">
   <div class="nav-container">
     <a href="#" class="logo" onclick="goHome()">
-      <span class="logo-icon">💔</span>
-      <span class="logo-text">Mani<span class="logo-accent">Trip</span></span>
+      <img src="/logo.png" alt="ManiTrip" class="logo-img">
     </a>
     <div class="nav-right">
       <a href="#advice-section" class="nav-advice-link">
@@ -313,8 +312,7 @@ const BODY_HTML = `
   <div class="container">
     <div class="footer-content">
       <div class="footer-brand">
-        <span class="logo-icon">💔</span>
-        <span class="logo-text">Mani<span class="logo-accent">Trip</span></span>
+        <img src="/logo.png" alt="ManiTrip" class="logo-img footer-logo-img">
         <p class="footer-tagline">Her tartışmanın bir mekanı vardır.</p>
       </div>
       <div class="footer-info">

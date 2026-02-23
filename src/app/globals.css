@@ -59,9 +59,8 @@ body {
 }
 .nav-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
-.logo-icon { font-size: 28px; filter: drop-shadow(0 0 10px var(--accent-glow)); }
-.logo-text { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
-.logo-accent { color: var(--accent); }
+.logo-img { height: 40px; width: auto; object-fit: contain; }
+.footer-logo-img { height: 36px; }
 .nav-right { display: flex; align-items: center; gap: 24px; }
 .nav-advice-link {
     display: flex; align-items: center; gap: 6px;
