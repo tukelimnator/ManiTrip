@@ -59,7 +59,7 @@ body {
 }
 .nav-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
-.logo-img { height: 56px; width: auto; object-fit: contain; }
+.logo-img { width: 160px; height: auto; object-fit: contain; }
 .footer-logo-img { height: 48px; }
 .nav-right { display: flex; align-items: center; gap: 24px; }
 .nav-advice-link {
