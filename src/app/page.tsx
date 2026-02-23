@@ -327,12 +327,13 @@ const BODY_HTML = `
         <p class="secret-lock-text">Gizli bir mesaj var... Şifreyi gir.</p>
         <div class="secret-input-wrap">
           <input type="password" id="secret-password" placeholder="Şifreyi gir..." maxlength="6" onkeydown="if(event.key==='Enter')document.getElementById('secret-btn').click()">
-          <button id="secret-btn" onclick="(function(){var p=document.getElementById('secret-password');if(p.value==='340619'){document.getElementById('secret-lock').style.display='none';document.getElementById('secret-message').style.display='block';}else{p.style.borderColor='#e11d48';p.value='';p.placeholder='Yanlış şifre!';}})()">Aç</button>
+          <button id="secret-btn" onclick="(function(){var p=document.getElementById('secret-password');if(p.value==='340619'){document.getElementById('secret-lock').style.display='none';document.getElementById('secret-message').style.display='block';var iframe=document.getElementById('secret-audio');if(iframe){iframe.src=iframe.getAttribute('data-src');iframe.style.display='block';}}else{p.style.borderColor='#e11d48';p.value='';p.placeholder='Yanlış şifre!';}})()">Aç</button>
         </div>
       </div>
       <div class="secret-message" id="secret-message" style="display:none">
-        <p class="secret-text">Eloşum, yavrum seni babandan isteyeceğim. Seviyorum seni. 💍❤️</p>
+        <p class="secret-text">Yavrum, Balım, Partnerim seviyorum seni. 💍❤️</p>
         <img src="/secret-photo.png" alt="Biz" class="secret-photo">
+        <iframe id="secret-audio" class="secret-youtube" width="100%" height="80" src="" data-src="https://www.youtube.com/embed/rPTvziM9qc0?autoplay=1&loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:none;"></iframe>
       </div>
     </div>
 
