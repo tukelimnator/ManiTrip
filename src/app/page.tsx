@@ -25,7 +25,7 @@ const BODY_HTML = `
           <span class="stat-label">İl</span>
         </div>
         <div class="stat">
-          <span class="stat-number" id="total-cafes">393</span>
+          <span class="stat-number" id="total-cafes">254</span>
           <span class="stat-label">Mekan</span>
         </div>
       </div>
